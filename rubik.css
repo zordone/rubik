@@ -1,0 +1,210 @@
+html, body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #111;
+    background-image: 
+        linear-gradient(80deg, #5556, #000A), 
+        linear-gradient(176deg, #333, #222 310px, #333 100px, #000);
+    color: #EEE;
+    font-family: 'Berkshire Swash', cursive;
+    font-size: 1em;
+}
+
+#content {
+    width: 900px;
+    min-height: 500px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+#rubikbg {
+    width: 500px;
+    height: 500px;
+    float: left;
+    overflow: hidden;
+}
+
+#title {
+    position: fixed;
+    font-size: 1.7rem;
+    text-shadow: 1px 1px 1px #000;
+}
+
+@-webkit-keyframes spinner {
+    from { transform: /*rotateX(0deg)*/    rotateY(0deg)    rotateX(15deg); }
+    to   { transform: /*rotateX(-360deg)*/ rotateY(-360deg) rotateX(15deg); }
+}
+
+#rubik {
+    -webkit-animation-name: spinner---OFF;
+    -webkit-animation-timing-function: linear;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-duration: 30s;
+    transform-style: preserve-3d;
+    position: relative;
+    top: 100px;
+    left: 100px;
+    perspective: 4000px;
+    transform: rotateX(-25deg) rotateY(25deg) rotateZ(0deg);
+    /*transform: rotateX(35deg) rotateY(-225deg) rotateZ(0deg);*/
+}
+
+.cell {
+    transform-style: preserve-3d;
+}
+
+.side {
+    position: absolute;
+    transition: background-color 500ms;
+    background-color: #181818;
+}
+
+.color {
+    transition: width 500ms, height 500ms, margin 500ms;
+    width: 90%;
+    height: 90%;
+    margin: 5%;
+    border-radius: 7%;
+}
+
+.red    { background-color: #B71234; }
+.orange { background-color: #FF5800; }
+.green  { background-color: #009B48; }
+.blue   { background-color: #0046AD; }
+.white  { background-color: #FFFFFF; }
+.yellow { background-color: #FFD500; }
+
+
+#rubik.seethrough .side {
+    transition: all 500ms;
+    background-color: transparent;
+}
+#rubik.seethrough .color {
+    transition: width 500ms, height 500ms, margin 500ms;
+    width: 70%;
+    height: 70%;
+    margin: 15%;
+}
+
+#controls {
+    float: left;
+    box-sizing: border-box;    
+    width: 320px;
+    height: 500px;
+    margin-left: 20px;
+    border-left: 1px solid #333;
+    padding: 75px 10px 55px 20px;
+}
+
+.navitem {
+    position: relative;
+    margin: 10px 0;
+    padding: 5px;
+    border: 1px solid #888;
+    border-radius: 10px;
+    cursor: default;
+    text-shadow: 1px 1px 1px #000;
+}
+.navitem:hover {
+    background-color: #222;
+    border-color: #EEE;
+}
+.navitem.disabled,
+.navitem.disabled div{
+    color: #333;
+    border-color: #333;
+    background-color: transparent;
+}
+
+@-webkit-keyframes navinprogress {
+    from { background-position: 0; }
+    to   { background-position: 95px; }
+}
+
+.navitem.inprogress {
+    -webkit-animation-name: navinprogress;
+    -webkit-animation-timing-function: linear;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-duration: 2s;
+    background-image: url("img/stripes.png");
+    background-color: transparent;
+    border-color: #EEE;
+}
+
+.navtitle {
+    font-size: 1.5rem;
+    margin-top: -2px;
+}
+
+.navsubtitle {
+    color: #888;
+    line-height: 1;
+    font-family: 'Boogaloo', cursive;
+}
+
+.navcheck {
+    transition: opacity 500ms;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    width: 45px;
+    height: 45px;
+    background: url("img/check.png") no-repeat;
+    background-size: contain;        
+    opacity: 0;
+}
+
+.navitem.checked .navcheck {
+    transition: opacity 500ms;
+    opacity: 0.9;
+}
+
+.handle {
+    color: black;
+    position: absolute;
+    font-size: 20px;
+    font-family: monospace;
+    width: 40px;
+    height: 40px;
+    background: url("img/handle.png");
+    background-size: 100%;
+    opacity: 0;
+}
+
+#rubik.handles .cell:hover .handle {
+    opacity: 0.5;
+}
+
+#rubik.handles .cell:hover .handle:hover {
+    opacity: 1;
+}
+
+.wheel {
+    position: relative;
+    width: 90px;
+    height: 90px;
+}
+
+.wheelcolor {
+    position: absolute;
+    transform-origin: 13px 43px;
+    top: 2px;
+    left: 32px;
+    width: 26px;
+    height: 26px;
+    border-radius: 13px;
+    box-shadow: 0 0 6px 2px rgba(0,0,0,0.8);
+    box-sizing: border-box;
+}
+
+.wheelcolor:hover {
+    border: 1px solid rgba(0,0,0,0.5);
+}
+
+.wheelcolor.current {
+    border: 2px solid rgba(0,0,0,0.8);
+}

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <link rel="stylesheet" type="text/css" href="rubik.css" />
+        <link href="https://fonts.googleapis.com/css?family=Berkshire+Swash|Boogaloo" rel="stylesheet">
+    </head>
+    <body>
+
+        <div id="content">
+
+            <div id="rubikbg">
+                <div id="title">Rubik's cube</div>
+                <div id="rubik"></div>
+            </div>
+
+            <div id="controls">
+                <div id="btnShuffle" class="navitem">
+                    <div class="navtitle">Shuffle</div>
+                    <div class="navsubtitle">Make random turns to shuffle the cube.</div>
+                </div>
+                <div id="btnSolve" class="navitem">
+                    <div class="navtitle">Solve</div>
+                    <div class="navsubtitle">Watch how the program solves the cube.</div>
+                </div>
+                <div id="btnManual" class="navitem">
+                    <div class="navtitle">Manual</div>
+                    <div class="navsubtitle">Try to solve the cube yourself.</div>
+                    <div class="navcheck"></div>
+                </div>
+                <div id="btnEdit" class="navitem">
+                    <div class="navtitle">Edit</div>
+                    <div class="navsubtitle">Set the cube into a specific state.</div>
+                    <div class="navcheck"></div>
+                </div>
+                <div id="btnSeeThrough" class="navitem">
+                    <div class="navtitle">See through</div>
+                    <div class="navsubtitle">You can see the backward faces.</div>
+                    <div class="navcheck"></div>
+                </div>
+            </div>
+            
+        </div>
+
+        <script src="jquery-2.1.3.min.js"></script>
+        <script src="solver.js"></script>
+        <script src="rubik.js"></script>
+    </body>
+</html>

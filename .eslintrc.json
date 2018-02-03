@@ -1,0 +1,19 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true
+    },
+    "extends": "eslint:recommended",
+    "rules": {
+        "indent": ["error", 4],
+        "linebreak-style": ["error", "unix"],
+        "quotes": ["error", "single"],
+        "semi": ["error", "always"],    
+        "quote-props": ["error", "as-needed"],
+        "eqeqeq": ["error", "always"],
+        "no-console": "off",
+        "prefer-const": ["error", {"destructuring": "all"}],
+        "prefer-template": "error",
+        "max-len": ["error", {"code": 120}]
+    }
+}
