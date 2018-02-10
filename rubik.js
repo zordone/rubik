@@ -22,7 +22,8 @@ class Rubik {
         this.shuffleing = false;
         this.manualing = false;
         this.editing = false;     
-        this.init();
+        this.init();        
+        this.startupAnimation();
     }
 
     px(index) {
@@ -277,7 +278,7 @@ class Rubik {
         this.setBtnSub(this.$btns.solve, 'Watch how the program solves the cube.');
         $('.navitem').removeClass('inprogress disabled');        
         this.$rubik.addClass('done');
-        window.setTimeout(() => this.$rubik.removeClass('done'), 2100);
+        window.setTimeout(() => this.$rubik.removeClass('done'), 2600);
     }
 
     onSolve() {
@@ -458,6 +459,24 @@ class Rubik {
         };
         dragtarget.mouseleave(onDragEnd);
         dragtarget.mouseup(onDragEnd);        
+    }
+    
+    startupAnimation() {
+        // intro/ready animation
+        this.onSolveReady();
+        // hide all sides
+        $('.side').css({opacity: 0});
+        // get the colored sides
+        const sides = $('.side:has(.color)').toArray();
+        // put them back one by one
+        const startupInterval = window.setInterval(() => {
+            const side = $(sides.splice(Math.random() * sides.length, 1));
+            side.animate({opacity: 1}, 200);
+            if (side.length === 0) {
+                $('.side').css({opacity: 1});
+                window.clearInterval(startupInterval);
+            }
+        }, 40);
     }
     
     init() {

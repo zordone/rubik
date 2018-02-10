@@ -190,7 +190,7 @@ body {
     animation-name: done;
     animation-timing-function: linear;
     animation-iteration-count: 1;
-    animation-duration: 2s;    
+    animation-duration: 2.5s;
 }
 
 @keyframes done {
