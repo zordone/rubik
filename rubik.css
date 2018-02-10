@@ -1,5 +1,6 @@
 html, body {
     height: 100%;
+    user-select: none;
 }
 
 body {
@@ -34,23 +35,22 @@ body {
     text-shadow: 1px 1px 1px #000;
 }
 
-@-webkit-keyframes spinner {
+@keyframes spinner {
     from { transform: /*rotateX(0deg)*/    rotateY(0deg)    rotateX(15deg); }
     to   { transform: /*rotateX(-360deg)*/ rotateY(-360deg) rotateX(15deg); }
 }
 
 #rubik {
-    -webkit-animation-name: spinner---OFF;
-    -webkit-animation-timing-function: linear;
-    -webkit-animation-iteration-count: infinite;
-    -webkit-animation-duration: 30s;
+    animation-name: spinner---OFF;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-duration: 30s;
     transform-style: preserve-3d;
     position: relative;
     top: 100px;
     left: 100px;
     perspective: 4000px;
-    transform: rotateX(-25deg) rotateY(25deg) rotateZ(0deg);
-    /*transform: rotateX(35deg) rotateY(-225deg) rotateZ(0deg);*/
+    transform: rotateX(-20deg) rotateY(25deg) rotateZ(0deg);
 }
 
 .cell {
@@ -120,16 +120,16 @@ body {
     background-color: transparent;
 }
 
-@-webkit-keyframes navinprogress {
+@keyframes navinprogress {
     from { background-position: 0; }
     to   { background-position: 95px; }
 }
 
 .navitem.inprogress {
-    -webkit-animation-name: navinprogress;
-    -webkit-animation-timing-function: linear;
-    -webkit-animation-iteration-count: infinite;
-    -webkit-animation-duration: 2s;
+    animation-name: navinprogress;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-duration: 2s;
     background-image: url("img/stripes.png");
     background-color: transparent;
     border-color: #EEE;
@@ -181,6 +181,20 @@ body {
 
 #rubik.handles .cell:hover .handle:hover {
     opacity: 1;
+}
+
+#rubik.done .cell {
+    animation-name: done;
+    animation-timing-function: linear;
+    animation-iteration-count: 1;
+    animation-duration: 2s;    
+}
+
+@keyframes done {
+    0%   { transform: scale(1.0) rotateY(0deg); }
+    10%  { transform: scale(1.2) rotateY(45deg); }
+    50%  { transform: scale(1.1) rotateY(180deg); }
+    100% { transform: scale(1.0) rotateY(360deg); }
 }
 
 .wheel {

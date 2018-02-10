@@ -247,9 +247,8 @@ class Rubik {
             direction = Math.floor(Math.random()*2) === 0 ? 1 : -1;
         axis = (axis + 1 + Math.floor(Math.random()*2)) % 3;
         this.rotate(axis, index, direction, 300);
-        times -= 1;
         if (this.shuffleing && times > 0) {
-            window.setTimeout(() => this.randomizeStep(times, axis, onReady), 350);
+            window.setTimeout(() => this.randomizeStep(times - 1, axis, onReady), 350);
         } else if (onReady) {
             onReady();
         }        
@@ -276,7 +275,9 @@ class Rubik {
     onSolveReady() {
         this.solving = false;
         this.setBtnSub(this.$btns.solve, 'Watch how the program solves the cube.');
-        $('.navitem').removeClass('inprogress disabled');
+        $('.navitem').removeClass('inprogress disabled');        
+        this.$rubik.addClass('done');
+        window.setTimeout(() => this.$rubik.removeClass('done'), 2100);
     }
 
     onSolve() {
@@ -310,7 +311,7 @@ class Rubik {
             this.$btns.shuffle.addClass('inprogress');
             this.disableOtherBtns(this.$btns.shuffle);
             this.setBtnSub(this.$btns.shuffle, 'Click again to stop, or wait until it\'s finished.');
-            this.randomize(50, () => this.onShuffleReady);
+            this.randomize(50, () => this.onShuffleReady());
         } else {
             this.onShuffleReady();
         }
@@ -410,6 +411,55 @@ class Rubik {
         this.$btns.edit.toggleClass('checked');
     }
 
+    initTrackball() {
+        const dragtarget = $('body'),
+            sensitivity = 0.5, 
+            limitX = 30;              
+        let active = false,
+            startX, startY, 
+            nextX, nextY, nextZ,
+            rotX = -20, rotY = 25, rotZ = 0;
+        dragtarget.mousedown(event => {
+            // ignore if it's a button or other non-dragging click
+            if ($(event.target).closest('.navitem, .handle, .wheelcolor').length) {
+                return;
+            }            
+            startX = event.screenX;
+            startY = event.screenY;
+            active = true;
+        });
+        dragtarget.mousemove(event => {
+            if (active) {                
+                const endX = event.screenX;
+                const endY = event.screenY;
+                // delta
+                const yaw   = Math.round((endX - startX) * sensitivity);
+                const pitch = Math.round((endY - startY) * sensitivity);
+                const roll  = 0;
+                // new rotation
+                nextX = rotX - pitch;
+                nextY = rotY + yaw;
+                nextZ = rotZ + roll;
+                // limit X to avoid pole singularities
+                nextX = Math.max(-limitX, Math.min(limitX, nextX));
+                // set
+                this.$rubik.css({
+                    transform: `rotateX(${nextX}deg) rotateY(${nextY}deg) rotateZ(${nextZ}deg)`
+                });
+            }
+        });
+        const onDragEnd = () => {
+            if (active) {
+                active = false;
+                rotX = nextX;
+                rotY = nextY;
+                rotZ = nextZ;                
+            }
+        };
+        dragtarget.mouseleave(onDragEnd);
+        dragtarget.mouseup(onDragEnd);        
+    }
+    
     init() {
         for (let z=0; z<3; z++) {
             for (let y=0; y<3; y++) {
@@ -431,6 +481,7 @@ class Rubik {
             height: this.width, // intentionally 'width'.
             'transform-origin': `50% 50% -${this.center}px`
         });
+        this.initTrackball();
         // buttons
         this.$btns.solve.click(this.onSolve.bind(this));
         this.$btns.manual.click(this.onManual.bind(this));

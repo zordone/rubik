@@ -129,11 +129,11 @@ class Solver {
     }
 
     // white center
-    state1() {
+    stage1() {
         const cell = this.cellByColors(['white']),
             pos = cell.pos;
         if (!this.posEqual(pos,[1,0,1])) {
-            console.log('state 1', pos);
+            console.debug('stage1', pos);
             if (pos[0] !== 1) {
                 return [[2, 1, 1-pos[0]]];
             }
@@ -148,11 +148,11 @@ class Solver {
     }
 
     // side centers
-    state2() {
+    stage2() {
         const cell = this.cellByColors(['green']),
             pos = cell.pos;
         if (!this.posEqual(pos,[1,1,0])) {
-            console.log('state 2', pos);
+            console.debug('stage2', pos);
             if (pos[0] !== 1) {
                 return [[1, 1, 1-pos[0]]];
             }
@@ -164,7 +164,7 @@ class Solver {
     }
 
     // white plus (green,red,blue,orange)
-    state3() {
+    stage3() {
         const sides = [
             ['green',  4],
             ['red',    3],
@@ -172,7 +172,7 @@ class Solver {
             ['orange', 2]
         ];
         for (let side=0; side<4; side++) {
-            const steps = this.state3sub(sides[side][0], sides[side][1]);
+            const steps = this.stage3sub(sides[side][0], sides[side][1]);
             if (steps.length > 0) {
                 return steps;
             }
@@ -181,17 +181,17 @@ class Solver {
     }
 
     // one part of the white plus
-    state3sub(color, side) {
+    stage3sub(color, side) {
         const cell = this.cellByColors(['white', color]),
             pos = this.posMap(cell.pos, side),
             posOk = this.posEqual(pos, [1,0,0]),
             rotOk = cell.sides[0].colorClass === 'white';
         if (posOk && !rotOk) {
-            console.log('state 3 rot', pos, color);
+            console.debug('stage3 rot', pos, color);
             return this.rotMapBack([[2, 0, 2]], side);
         }
         if (!posOk) {
-            console.log('state 3 pos', pos, color);
+            console.debug('stage3 pos', pos, color);
             if (pos[2] === 2 && pos[1] !== 2) {
                 return this.rotMapBack([[2, pos[2], [-1,2,1][pos[0]] ]], side);
             }
@@ -212,8 +212,8 @@ class Solver {
         return [];
     }
 
-    // state4: white corners
-    state4() {
+    // stage4: white corners
+    stage4() {
         const sides = [
             ['green',  'orange', 4],
             ['red',    'green',  3],
@@ -221,7 +221,7 @@ class Solver {
             ['orange', 'blue',   2]
         ];
         for (let iSide=0; iSide<4; iSide++) {
-            const steps = this.state4sub(sides[iSide][0], sides[iSide][1], sides[iSide][2]);
+            const steps = this.stage4sub(sides[iSide][0], sides[iSide][1], sides[iSide][2]);
             if (steps.length > 0) {
                 return steps;
             }
@@ -230,7 +230,7 @@ class Solver {
     }
 
     // one white corner
-    state4sub(color1, color2, side) {
+    stage4sub(color1, color2, side) {
         const cell = this.cellByColors(['white', color1, color2]),
             pos = this.posMap(cell.pos, side),
             posOk = this.posEqual(pos, [0,0,0]),
@@ -268,8 +268,8 @@ class Solver {
         return [];
     }
 
-    // state 5: middle layer
-    state5() {
+    // stage 5: middle layer
+    stage5() {
         const sides = [
             ['green',  'orange', 4, 2],
             ['red',    'green',  3, 4],
@@ -277,7 +277,7 @@ class Solver {
             ['orange', 'blue',   2, 5]
         ];
         for (let iSide=0; iSide<4; iSide++) {
-            const steps = this.state5sub(sides[iSide][0], sides[iSide][1], sides[iSide][2], sides[iSide][3]);
+            const steps = this.stage5sub(sides[iSide][0], sides[iSide][1], sides[iSide][2], sides[iSide][3]);
             if (steps.length > 0) {
                 return steps;
             }
@@ -286,7 +286,7 @@ class Solver {
     }
 
     // one middle edge
-    state5sub(color1, color2, side1, side2) {
+    stage5sub(color1, color2, side1, side2) {
         const cell = this.cellByColors([color1, color2]),
             frontColor = cell.sides[side1].colorClass,
             leftSteps = [[1,2,1], [0,0,-1], [1,2,-1], [0,0,1], [1,2,-1], [2,0,-1], [1,2,1], [2,0,1]],
@@ -309,18 +309,18 @@ class Solver {
             if (pos[1] === 1) {
                 // if it's on the back, we turn around
                 if (pos[2] === 2) {
-                    console.log('state5sub middle backside');
+                    console.debug('stage5 middle backside');
                     frontSide = this.oppositeSide(frontSide);
                     pos = this.posMap(cell.pos, frontSide);
                     dirSteps = pos[0] === 0 ? leftSteps : rightSteps;
                     return this.rotMapBack(dirSteps, frontSide);
                 }
-                console.log('state5sub middle frontside');
+                console.debug('stage5 middle frontside');
                 return this.rotMapBack(dirSteps, frontSide);
             }
             // bottom layer -> dest
             if (pos[1] === 2) {
-                console.log('state5sub bottom');
+                console.debug('stage5 bottom');
                 if (pos[2] !== 0) {
                     // turn to bottom-front
                     steps.push([1, 2, [1,2,-1][pos[0]]]);
@@ -337,7 +337,7 @@ class Solver {
         }
         // turn in place
         if (posOk && frontColor !== color1) {
-            console.log('state5sub turn');
+            console.debug('stage5 turn');
             steps = steps.concat(dirSteps).concat([[1,2,2]]).concat(dirSteps);
             return this.rotMapBack(steps, frontSide);
         }
@@ -345,7 +345,7 @@ class Solver {
     }
 
     // bottom edges
-    state6() {
+    stage6() {
         let side, pos, cell;
         const sides = [
             ['green',  4, [1,2,0]],
@@ -380,13 +380,13 @@ class Solver {
         }
         // if there is better
         if (maxMatchIndex !== 0) {
-            console.log('state6 bottom best rotation');
+            console.debug('stage6 bottom best rotation');
             return [[1,2, [0,1,2,-1][maxMatchIndex]]];
         }
         // not all in place
         let indexOrder, pos1, pos2, pos1M, pos2M, frontSide;
         if (matches[maxMatchIndex] < 4) {
-            console.log('state6 bottom edge replace');
+            console.debug('stage6 bottom edge replace');
             indexOrder = currentOrder.map(item => destOrder.indexOf(item));
             // first step of a sort
             for (let iSide=0; iSide<3; iSide++) {
@@ -421,7 +421,7 @@ class Solver {
                 if (!indexOrder[iSide]) {
                     pos1 = sides[iSide][2];
                     pos2 = sides[iSide+1][2];
-                    console.log('state6 turn in place', pos1, pos2);
+                    console.debug('stage6 turn in place', pos1, pos2);
                     break;
                 }
             }
@@ -443,7 +443,7 @@ class Solver {
     }
 
     // bottom corners
-    state7() {
+    stage7() {
         const turnUpSteps = [
                 [0,0, 1], [1,0,-1], [0,0,-1], [2,0,1],
                 [1,0,-1], [2,0,-1], [1,2,-1], [2,0,1],
@@ -480,7 +480,7 @@ class Solver {
         }
         // turn 3 bad corner
         if (!posOk) {
-            console.log('state7 turn 3 bad corners');
+            console.debug('stage7 turn 3 bad corners');
             frontSide = lastOk !== undefined ? parts[lastOk][2] : 4;
             return this.rotMapBack([
                 [0,2,-1], [1,2,1], [0,0,-1], [1,2,-1],
@@ -505,14 +505,14 @@ class Solver {
             frontColor1 = cell1.sides[side].colorClass;
             frontColor2 = cell2.sides[side].colorClass;
             if (frontColor1 === 'yellow' && frontColor2 === 'yellow') {
-                console.log('state7 2 yellow (up)');
+                console.debug('stage7 2 yellow (up)');
                 return this.rotMapBack(turnUpSteps, side);
             }
             // both bottom sides are side-color
             bottomColor1 = cell1.sides[1].colorClass;
             bottomColor2 = cell2.sides[1].colorClass;
             if (bottomColor1 === sideColor && bottomColor2 === sideColor) {
-                console.log('state7 2 other color (out)');
+                console.debug('stage7 2 other color (out)');
                 return this.rotMapBack(turnOutSteps, side);
             }
             // if they aren't wrong the same way
@@ -527,17 +527,18 @@ class Solver {
         // do the best partial
         side = lastWrongPair !== undefined ? lastWrongPair : lastWrongSingle;
         if (side !== undefined) {
-            console.log('state7 2 partial (out)');
+            console.debug('stage7 2 partial (out)');
             return this.rotMapBack(turnOutSteps, side);
         }
-        console.log('done.');
+        console.debug('done.');
         return [];
     }
 
     next() {
-        const states = ['state1', 'state2', 'state3', 'state4', 'state5', 'state6', 'state7'];
-        for (let iState=0; iState<states.length; iState++) {
-            const steps = this[states[iState]]();
+        // find the first stage that returns some steps 
+        const stageCount = 7;
+        for (let iStage=1; iStage<=stageCount; iStage++) {
+            const steps = this[`stage${iStage}`]();
             if (steps.length > 0) {
                 return steps;
             }
