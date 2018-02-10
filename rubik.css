@@ -49,7 +49,7 @@ body {
     position: relative;
     top: 100px;
     left: 100px;
-    perspective: 4000px;
+    perspective: 7000px;
     transform: rotateX(-20deg) rotateY(25deg) rotateZ(0deg);
 }
 
@@ -173,14 +173,17 @@ body {
     background: url("img/handle.png");
     background-size: 100%;
     opacity: 0;
+    pointer-events: none;
 }
 
 #rubik.handles .cell:hover .handle {
     opacity: 0.5;
+    pointer-events: auto;    
 }
 
 #rubik.handles .cell:hover .handle:hover {
     opacity: 1;
+    pointer-events: auto;    
 }
 
 #rubik.done .cell {
